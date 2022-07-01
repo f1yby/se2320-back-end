@@ -20,7 +20,7 @@ public class HouseController {
 
     @PostMapping("/search")
     public List<HouseEntity> getHouseByPrice(@RequestParam("price1") int price1, @RequestParam("price2") int price2) {
-        return houseRepository.findByPrice(price1, price2);
+        return houseRepository.findByPriceBetween(price1, price2);
     }
 }
 

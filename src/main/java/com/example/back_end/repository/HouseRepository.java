@@ -7,6 +7,6 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 public interface HouseRepository extends CrudRepository<HouseEntity, Integer> {
-    @Query("select h from HouseEntity h where h.price >= :price1 and h.price <= :price2")
-    List<HouseEntity> findByPrice(int price1, int price2);
+    //@Query("select h from HouseEntity h where h.price >= :price1 and h.price <= :price2")
+    List<HouseEntity> findByPriceBetween(int price1, int price2);
 }

@@ -1,28 +1,29 @@
 package com.example.back_end.entity;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
-@Table(name = "house", schema = "zlm", catalog = "")
+@Table(name = "house", schema = "zlm")
 public class HouseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id")
     private String id;
     @Basic
-    @Column(name = "createTime")
+    @Column(name = "create_time")
     private String createTime;
     @Basic
-    @Column(name = "displaySource")
+    @Column(name = "display_source")
     private String displaySource;
     @Basic
-    @Column(name = "displayRentType")
+    @Column(name = "display_rent_type")
     private String displayRentType;
     @Basic
     @Column(name = "icon")
     private String icon;
     @Basic
-    @Column(name = "publishDate")
+    @Column(name = "publish_date")
     private String publishDate;
     @Basic
     @Column(name = "pictures")
@@ -40,10 +41,10 @@ public class HouseEntity {
     @Column(name = "latitude")
     private String latitude;
     @Basic
-    @Column(name = "rentType")
+    @Column(name = "rent_type")
     private Integer rentType;
     @Basic
-    @Column(name = "onlineURL")
+    @Column(name = "online_url")
     private String onlineUrl;
     @Basic
     @Column(name = "district")
@@ -58,7 +59,7 @@ public class HouseEntity {
     @Column(name = "source")
     private String source;
     @Basic
-    @Column(name = "reportNum")
+    @Column(name = "report_num")
     private String reportNum;
     @Basic
     @Column(name = "residential")
@@ -79,13 +80,13 @@ public class HouseEntity {
     @Column(name = "wei")
     private Integer wei;
     @Basic
-    @Column(name = "metroLine")
+    @Column(name = "metro_line")
     private Integer metroLine;
     @Basic
-    @Column(name = "metroStation")
+    @Column(name = "metro_station")
     private String metroStation;
     @Basic
-    @Column(name = "firstPicUrl")
+    @Column(name = "first_pic_url")
     private String firstPicUrl;
 
     public String getId() {
@@ -308,71 +309,12 @@ public class HouseEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         HouseEntity that = (HouseEntity) o;
-
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
-        if (createTime != null ? !createTime.equals(that.createTime) : that.createTime != null) return false;
-        if (displaySource != null ? !displaySource.equals(that.displaySource) : that.displaySource != null)
-            return false;
-        if (displayRentType != null ? !displayRentType.equals(that.displayRentType) : that.displayRentType != null)
-            return false;
-        if (icon != null ? !icon.equals(that.icon) : that.icon != null) return false;
-        if (publishDate != null ? !publishDate.equals(that.publishDate) : that.publishDate != null) return false;
-        if (pictures != null ? !pictures.equals(that.pictures) : that.pictures != null) return false;
-        if (title != null ? !title.equals(that.title) : that.title != null) return false;
-        if (location != null ? !location.equals(that.location) : that.location != null) return false;
-        if (longitude != null ? !longitude.equals(that.longitude) : that.longitude != null) return false;
-        if (latitude != null ? !latitude.equals(that.latitude) : that.latitude != null) return false;
-        if (rentType != null ? !rentType.equals(that.rentType) : that.rentType != null) return false;
-        if (onlineUrl != null ? !onlineUrl.equals(that.onlineUrl) : that.onlineUrl != null) return false;
-        if (district != null ? !district.equals(that.district) : that.district != null) return false;
-        if (city != null ? !city.equals(that.city) : that.city != null) return false;
-        if (price != null ? !price.equals(that.price) : that.price != null) return false;
-        if (source != null ? !source.equals(that.source) : that.source != null) return false;
-        if (reportNum != null ? !reportNum.equals(that.reportNum) : that.reportNum != null) return false;
-        if (residential != null ? !residential.equals(that.residential) : that.residential != null) return false;
-        if (squares != null ? !squares.equals(that.squares) : that.squares != null) return false;
-        if (layout != null ? !layout.equals(that.layout) : that.layout != null) return false;
-        if (shi != null ? !shi.equals(that.shi) : that.shi != null) return false;
-        if (ting != null ? !ting.equals(that.ting) : that.ting != null) return false;
-        if (wei != null ? !wei.equals(that.wei) : that.wei != null) return false;
-        if (metroLine != null ? !metroLine.equals(that.metroLine) : that.metroLine != null) return false;
-        if (metroStation != null ? !metroStation.equals(that.metroStation) : that.metroStation != null) return false;
-        if (firstPicUrl != null ? !firstPicUrl.equals(that.firstPicUrl) : that.firstPicUrl != null) return false;
-
-        return true;
+        return Objects.equals(id, that.id) && Objects.equals(createTime, that.createTime) && Objects.equals(displaySource, that.displaySource) && Objects.equals(displayRentType, that.displayRentType) && Objects.equals(icon, that.icon) && Objects.equals(publishDate, that.publishDate) && Objects.equals(pictures, that.pictures) && Objects.equals(title, that.title) && Objects.equals(location, that.location) && Objects.equals(longitude, that.longitude) && Objects.equals(latitude, that.latitude) && Objects.equals(rentType, that.rentType) && Objects.equals(onlineUrl, that.onlineUrl) && Objects.equals(district, that.district) && Objects.equals(city, that.city) && Objects.equals(price, that.price) && Objects.equals(source, that.source) && Objects.equals(reportNum, that.reportNum) && Objects.equals(residential, that.residential) && Objects.equals(squares, that.squares) && Objects.equals(layout, that.layout) && Objects.equals(shi, that.shi) && Objects.equals(ting, that.ting) && Objects.equals(wei, that.wei) && Objects.equals(metroLine, that.metroLine) && Objects.equals(metroStation, that.metroStation) && Objects.equals(firstPicUrl, that.firstPicUrl);
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (createTime != null ? createTime.hashCode() : 0);
-        result = 31 * result + (displaySource != null ? displaySource.hashCode() : 0);
-        result = 31 * result + (displayRentType != null ? displayRentType.hashCode() : 0);
-        result = 31 * result + (icon != null ? icon.hashCode() : 0);
-        result = 31 * result + (publishDate != null ? publishDate.hashCode() : 0);
-        result = 31 * result + (pictures != null ? pictures.hashCode() : 0);
-        result = 31 * result + (title != null ? title.hashCode() : 0);
-        result = 31 * result + (location != null ? location.hashCode() : 0);
-        result = 31 * result + (longitude != null ? longitude.hashCode() : 0);
-        result = 31 * result + (latitude != null ? latitude.hashCode() : 0);
-        result = 31 * result + (rentType != null ? rentType.hashCode() : 0);
-        result = 31 * result + (onlineUrl != null ? onlineUrl.hashCode() : 0);
-        result = 31 * result + (district != null ? district.hashCode() : 0);
-        result = 31 * result + (city != null ? city.hashCode() : 0);
-        result = 31 * result + (price != null ? price.hashCode() : 0);
-        result = 31 * result + (source != null ? source.hashCode() : 0);
-        result = 31 * result + (reportNum != null ? reportNum.hashCode() : 0);
-        result = 31 * result + (residential != null ? residential.hashCode() : 0);
-        result = 31 * result + (squares != null ? squares.hashCode() : 0);
-        result = 31 * result + (layout != null ? layout.hashCode() : 0);
-        result = 31 * result + (shi != null ? shi.hashCode() : 0);
-        result = 31 * result + (ting != null ? ting.hashCode() : 0);
-        result = 31 * result + (wei != null ? wei.hashCode() : 0);
-        result = 31 * result + (metroLine != null ? metroLine.hashCode() : 0);
-        result = 31 * result + (metroStation != null ? metroStation.hashCode() : 0);
-        result = 31 * result + (firstPicUrl != null ? firstPicUrl.hashCode() : 0);
-        return result;
+        return Objects.hash(id, createTime, displaySource, displayRentType, icon, publishDate, pictures, title, location, longitude, latitude, rentType, onlineUrl, district, city, price, source, reportNum, residential, squares, layout, shi, ting, wei, metroLine, metroStation, firstPicUrl);
     }
 }
