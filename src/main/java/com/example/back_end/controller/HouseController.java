@@ -6,13 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
-import javax.persistence.EntityManager;
 import java.util.List;
 
 @RestController
@@ -29,16 +28,17 @@ public class HouseController {
         return houseEntityService.findByPriceBetween(price1, price2);
     }
 
-    @Resource
-    private EntityManager entityManager;
-
     @PostMapping("/search")
     public Page<HouseEntity> getHouse(@RequestParam(required = false) List<String> district,
-                                      Integer price1, Integer price2) {
-        int page = 1;//当前页，从 0 开始。
+                                      Integer price1, Integer price2,
+                                      @RequestParam(required = false) List<Integer> rentType,
+                                      @RequestParam(required = false) List<Integer> rooms,
+                                      @RequestParam(defaultValue = "0") Integer page) {
+//        int page = 1;       //当前页，从 0 开始。
         int pageSize = 5;
-        Pageable pageable = PageRequest.of(page, pageSize);
-        return houseEntityService.getHouseListByPage(district, price1, price2, pageable);
+        Sort sort = Sort.by(Sort.Direction.DESC, "createTime"); //按创建时间排序
+        Pageable pageable = PageRequest.of(page, pageSize, sort);
+        return houseEntityService.getHouseListByPage(district, price1, price2, rentType, rooms, pageable);
     }
 }
 

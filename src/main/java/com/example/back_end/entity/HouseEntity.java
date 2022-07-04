@@ -1,5 +1,7 @@
 package com.example.back_end.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -60,6 +62,7 @@ public class HouseEntity {
     private String source;
     @Basic
     @Column(name = "report_num")
+    @JsonIgnore
     private String reportNum;
     @Basic
     @Column(name = "residential")
