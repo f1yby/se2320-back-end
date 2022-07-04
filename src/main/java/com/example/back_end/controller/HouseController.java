@@ -16,7 +16,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -37,8 +36,9 @@ public class HouseController {
     private EntityManager entityManager;
 
     @PostMapping("/search")
-    public List<HouseEntity> getHouse(String[] district, Integer price1, Integer price2) {
-        System.out.println(Arrays.toString(district));
+    public List<HouseEntity> getHouse(@RequestParam(required = false) List<String> district,
+                                      Integer price1, Integer price2) {
+        System.out.println(district);
         System.out.println(price1);
         System.out.println(price2);
         //创建CriteriaBuilder安全查询工厂
