@@ -26,11 +26,11 @@ public class HouseEntityService {
                                                 List<String> metro_station,
                                                 Pageable pageable) {
         Specification<HouseEntity> specificationQuery = (root, criteriaQuery, criteriaBuilder) -> {
-            System.out.println(district);
-            System.out.println(price1);
-            System.out.println(price2);
-            System.out.println(rentType);
-            System.out.println(rooms);
+            System.out.println("district=" + district);
+            System.out.println("price1,price1=[" + price1 + "," + price2 + "]");
+            System.out.println("rentType=" + rentType);
+            System.out.println("rooms=" + rooms);
+            System.out.println("metro_line=" + metro_line + "\t metro_station" + metro_station);
             List<Predicate> predicatesList = new ArrayList<>();
 
             if (price1 != null && price2 != null) {
