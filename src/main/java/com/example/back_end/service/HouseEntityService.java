@@ -22,6 +22,8 @@ public class HouseEntityService {
                                                 Integer price1, Integer price2,
                                                 List<Integer> rentType,
                                                 List<Integer> rooms,
+                                                Integer metro_line,
+                                                List<String> metro_station,
                                                 Pageable pageable) {
         Specification<HouseEntity> specificationQuery = (root, criteriaQuery, criteriaBuilder) -> {
             System.out.println(district);
@@ -54,6 +56,14 @@ public class HouseEntityService {
                 CriteriaBuilder.In<Integer> inClause = criteriaBuilder.in(root.get("rentType"));
                 rentType.forEach(inClause::value);
                 predicatesList.add(inClause);
+            }
+            if (metro_line != null) {
+                predicatesList.add(criteriaBuilder.equal(root.get("metroLine"), metro_line));
+                if (metro_station != null) {
+                    CriteriaBuilder.In<String> inClause = criteriaBuilder.in(root.get("metroStation"));
+                    metro_station.forEach(inClause::value);
+                    predicatesList.add(inClause);
+                }
             }
             // and,or 方法会把参数中的predicate组合起来,复杂条件可以互相嵌套组合
             return criteriaBuilder.and(predicatesList.toArray(new Predicate[0]));
