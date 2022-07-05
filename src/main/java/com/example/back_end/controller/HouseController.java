@@ -35,11 +35,14 @@ public class HouseController {
                                       @RequestParam(required = false) List<Integer> rooms,
                                       Integer metro_line,
                                       @RequestParam(required = false) List<String> metro_station,
+                                      @RequestParam(defaultValue = "5") Integer pageSize,
                                       @RequestParam(defaultValue = "0") Integer page) {
 //        int page = 1;       //当前页，从 0 开始。
-        int pageSize = 5;
         Sort sort = Sort.by(Sort.Direction.DESC, "createTime"); //按创建时间排序
         Pageable pageable = PageRequest.of(page, pageSize, sort);
+
+        System.out.println("district= " + district + "\tprice1,price1=[" + price1 + "," + price2 + "]" + "\trentType=" + rentType + "\trooms=" + rooms + "\tmetro_line=" + metro_line + "\tmetro_station= " + metro_station + "\tpage= " + page+ "\tpageSize= " + pageSize);
+
         return houseEntityService.
                 getHouseListByPage(district, price1, price2, rentType,
                         rooms, metro_line, metro_station, pageable);
