@@ -36,12 +36,12 @@ public class HouseEntityService {
             if (price1 != null && price2 != null) {
                 predicatesList.add(criteriaBuilder.between(root.get("price"), price1, price2));
             }
-            if (district != null) {
+            if (district != null && district.size() > 0) {
                 CriteriaBuilder.In<String> inClause = criteriaBuilder.in(root.get("district"));
                 district.forEach(inClause::value);
                 predicatesList.add(inClause);
             }
-            if (rooms != null) {
+            if (rooms != null && rooms.size() > 0) {
                 List<Predicate> predicatesRooms = new ArrayList<>();
                 CriteriaBuilder.In<Integer> inClause = criteriaBuilder.in(root.get("shi"));
                 rooms.forEach(inClause::value);
@@ -52,14 +52,14 @@ public class HouseEntityService {
                 }
                 predicatesList.add(criteriaBuilder.or(predicatesRooms.toArray(new Predicate[0])));
             }
-            if (rentType != null) {
+            if (rentType != null && rentType.size() > 0) {
                 CriteriaBuilder.In<Integer> inClause = criteriaBuilder.in(root.get("rentType"));
                 rentType.forEach(inClause::value);
                 predicatesList.add(inClause);
             }
             if (metro_line != null) {
                 predicatesList.add(criteriaBuilder.equal(root.get("metroLine"), metro_line));
-                if (metro_station != null) {
+                if (metro_station != null && metro_station.size() > 0) {
                     CriteriaBuilder.In<String> inClause = criteriaBuilder.in(root.get("metroStation"));
                     metro_station.forEach(inClause::value);
                     predicatesList.add(inClause);
