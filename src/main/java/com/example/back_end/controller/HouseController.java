@@ -1,7 +1,7 @@
 package com.example.back_end.controller;
 
 import com.example.back_end.entity.HouseEntity;
-import com.example.back_end.service.HouseEntityService;
+import com.example.back_end.serviceImpl.HouseEntityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

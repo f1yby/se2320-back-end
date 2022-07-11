@@ -1,13 +1,16 @@
 package com.example.back_end.service;
 
-import com.example.back_end.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import com.example.back_end.entity.HouseEntity;
+import com.example.back_end.entity.UserEntity;
+import com.example.back_end.utility.Result;
 
-@Service
-public class UserEntityService {
-    @Autowired
-    private UserRepository userRepository;
+import javax.persistence.criteria.CriteriaBuilder;
+import java.util.List;
 
-
+public interface UserEntityService {
+    public Result<UserEntity> login(String name, String password);
+    public Result<UserEntity> register(UserEntity user);
+    public Result<UserEntity> favor(Integer uid, String hid);
+    public Result<UserEntity> unFavor(Integer uid, String hid);
+    public List<HouseEntity> getFavorites(Integer uid);
 }

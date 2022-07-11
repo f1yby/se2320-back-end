@@ -1,4 +1,4 @@
-package com.example.back_end.service;
+package com.example.back_end.serviceImpl;
 
 import com.example.back_end.entity.HouseEntity;
 import com.example.back_end.repository.HouseRepository;

@@ -8,10 +8,14 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
+
 @Repository
 public interface HouseRepository extends
         PagingAndSortingRepository<HouseEntity, String>,
         JpaSpecificationExecutor<HouseEntity> {
     //@Query("select h from HouseEntity h where h.price >= :price1 and h.price <= :price2")
     List<HouseEntity> findByPriceBetween(int price1, int price2);
+
+    Optional<HouseEntity> findById(String id);
 }

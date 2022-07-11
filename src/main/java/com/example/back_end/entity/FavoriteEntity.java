@@ -15,7 +15,7 @@ public class FavoriteEntity {
     private String houseId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "user_id")
     private UserEntity user;
 
     public int getId() {
