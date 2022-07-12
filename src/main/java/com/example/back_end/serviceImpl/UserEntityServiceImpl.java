@@ -64,8 +64,9 @@ public class UserEntityServiceImpl implements UserEntityService {
         return new Result<>(Constants.ERROR, "Register error");
     }
 
-    public Result<UserEntity> favor(String hid) {
+    public Result<String> favor(String hid) {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
+
         Optional<UserEntity> user = userRepository.findByName(name);
         if (!user.isPresent())
             return new Result<>(Constants.ERROR, "User doesn't exist");
@@ -78,10 +79,14 @@ public class UserEntityServiceImpl implements UserEntityService {
         favorite.setHouseId(house.get().getId());
         user.get().getFavoriteHouses().add(favorite);
         userRepository.save(user.get());
-        return new Result<>(Constants.SUCCESS, "Success to favor");
+        // generate new token
+        UserDetails userDetails = userDetailsService.loadUserByUsername(name);
+        UsernamePasswordAuthenticationToken upToken
+                = new UsernamePasswordAuthenticationToken(name, user.get().getPassword());
+        return new Result<>(Constants.SUCCESS, "Success to favor", jwtTokenUtil.generateToken(userDetails));
     }
 
-    public Result<UserEntity> unFavor(String hid) {
+    public Result<String> unFavor(String hid) {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<UserEntity> user = userRepository.findByName(name);
         if (!user.isPresent())
@@ -94,7 +99,11 @@ public class UserEntityServiceImpl implements UserEntityService {
             if (favorite1.getHouseId().equals(house.get().getId())) {
                 user.get().getFavoriteHouses().remove(favorite1);
                 userRepository.save(user.get());
-                return new Result<>(Constants.SUCCESS, "Success to unfavor");
+                // generate new token
+                UserDetails userDetails = userDetailsService.loadUserByUsername(name);
+                UsernamePasswordAuthenticationToken upToken
+                        = new UsernamePasswordAuthenticationToken(name, user.get().getPassword());
+                return new Result<>(Constants.SUCCESS, "Success to unfavor", jwtTokenUtil.generateToken(userDetails));
             }
         }
         return new Result<>(Constants.ERROR, "Favor doesn't exist");

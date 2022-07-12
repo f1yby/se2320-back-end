@@ -10,7 +10,7 @@ import java.util.List;
 public interface UserEntityService {
     public Result<String> login(String name, String password);
     public Result<UserEntity> register(UserEntity user);
-    public Result<UserEntity> favor(String hid);
-    public Result<UserEntity> unFavor(String hid);
+    public Result<String> favor(String hid);
+    public Result<String> unFavor(String hid);
     public List<HouseEntity> getFavorites();
 }

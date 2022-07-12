@@ -33,12 +33,12 @@ public class UserController {
     }
 
     @PostMapping("/favor")
-    public Result<UserEntity> favor(@RequestParam(value = "house_id") String hid) {
+    public Result<String> favor(@RequestParam(value = "house_id") String hid) {
        return userEntityService.favor(hid);
     }
 
     @PostMapping("/unFavor")
-    public Result<UserEntity> unFavor(@RequestParam(value = "house_id") String hid) {
+    public Result<String> unFavor(@RequestParam(value = "house_id") String hid) {
         return userEntityService.unFavor(hid);
     }
 
