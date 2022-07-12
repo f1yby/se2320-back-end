@@ -7,8 +7,15 @@ import com.example.back_end.repository.HouseRepository;
 import com.example.back_end.repository.UserRepository;
 import com.example.back_end.service.UserEntityService;
 import com.example.back_end.utility.Constants;
+import com.example.back_end.utility.JwtTokenUtil;
 import com.example.back_end.utility.Result;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,16 +30,26 @@ public class UserEntityServiceImpl implements UserEntityService {
     @Autowired
     private HouseRepository houseRepository;
 
-    public Result<UserEntity> login(String name, String password) {
-        Optional<UserEntity> user1 = userRepository.findByName(name);
-        if (user1.isPresent()) {
-            if (user1.get().getPassword().equals(password)) {
-                return new Result<>(Constants.SUCCESS,
-                        "Success to login", user1.get());
-            }
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private UserDetailsService userDetailsService;
+
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+
+    public Result<String> login(String name, String password) {
+        UserDetails userDetails = userDetailsService.loadUserByUsername(name);
+
+        System.out.println(userDetails.getUsername());
+        System.out.println(userDetails.getPassword());
+        System.out.println(userDetails.getAuthorities());
+
+        if (!userDetails.getPassword().equals(password))
             return new Result<>(Constants.ERROR, "Password error");
-        }
-        return new Result<>(Constants.ERROR, "User doesn't exist");
+
+        UsernamePasswordAuthenticationToken upToken = new UsernamePasswordAuthenticationToken(name, password);
+        return new Result<>(Constants.SUCCESS, "Success to login", jwtTokenUtil.generateToken(userDetails));
     }
 
     public Result<UserEntity> register(UserEntity user) {
@@ -47,8 +64,9 @@ public class UserEntityServiceImpl implements UserEntityService {
         return new Result<>(Constants.ERROR, "Register error");
     }
 
-    public Result<UserEntity> favor(Integer uid, String hid) {
-        Optional<UserEntity> user = userRepository.findById(uid);
+    public Result<UserEntity> favor(String hid) {
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<UserEntity> user = userRepository.findByName(name);
         if (!user.isPresent())
             return new Result<>(Constants.ERROR, "User doesn't exist");
         Optional<HouseEntity> house = houseRepository.findById(hid);
@@ -60,11 +78,12 @@ public class UserEntityServiceImpl implements UserEntityService {
         favorite.setHouseId(house.get().getId());
         user.get().getFavoriteHouses().add(favorite);
         userRepository.save(user.get());
-        return new Result<>(Constants.SUCCESS, "Success to favor", user.get());
+        return new Result<>(Constants.SUCCESS, "Success to favor");
     }
 
-    public Result<UserEntity> unFavor(Integer uid, String hid) {
-        Optional<UserEntity> user = userRepository.findById(uid);
+    public Result<UserEntity> unFavor(String hid) {
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<UserEntity> user = userRepository.findByName(name);
         if (!user.isPresent())
             return new Result<>(Constants.ERROR, "User doesn't exist");
         Optional<HouseEntity> house = houseRepository.findById(hid);
@@ -75,14 +94,15 @@ public class UserEntityServiceImpl implements UserEntityService {
             if (favorite1.getHouseId().equals(house.get().getId())) {
                 user.get().getFavoriteHouses().remove(favorite1);
                 userRepository.save(user.get());
-                return new Result<>(Constants.SUCCESS, "Success to unfavor", user.get());
+                return new Result<>(Constants.SUCCESS, "Success to unfavor");
             }
         }
         return new Result<>(Constants.ERROR, "Favor doesn't exist");
     }
 
-    public List<HouseEntity> getFavorites(Integer uid) {
-        Optional<UserEntity> user = userRepository.findById(uid);
+    public List<HouseEntity> getFavorites() {
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<UserEntity> user = userRepository.findByName(name);
         if (!user.isPresent()) return null;
         List<HouseEntity> res = new ArrayList<>();
         for (FavoriteEntity favorite : user.get().getFavoriteHouses()) {

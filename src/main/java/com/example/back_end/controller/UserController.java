@@ -20,7 +20,7 @@ public class UserController {
     private UserEntityService userEntityService;
 
     @PostMapping("/login")
-    public Result<UserEntity> login(@RequestParam(value = "name") String name,
+    public Result<String> login(@RequestParam(value = "name") String name,
                                     @RequestParam(value = "password") String password) {
         return userEntityService.login(name, password);
     }
@@ -33,20 +33,18 @@ public class UserController {
     }
 
     @PostMapping("/favor")
-    public Result<UserEntity> favor(@RequestParam(value = "user_id") Integer uid,
-                            @RequestParam(value = "house_id") String hid) {
-       return userEntityService.favor(uid, hid);
+    public Result<UserEntity> favor(@RequestParam(value = "house_id") String hid) {
+       return userEntityService.favor(hid);
     }
 
     @PostMapping("/unFavor")
-    public Result<UserEntity> unFavor(@RequestParam(value = "user_id") Integer uid,
-                              @RequestParam(value = "house_id") String hid) {
-        return userEntityService.unFavor(uid, hid);
+    public Result<UserEntity> unFavor(@RequestParam(value = "house_id") String hid) {
+        return userEntityService.unFavor(hid);
     }
 
     @PostMapping("/getFavorites")
-    public List<HouseEntity> getFavorites(@RequestParam(value = "user_id") Integer uid) {
-        return userEntityService.getFavorites(uid);
+    public List<HouseEntity> getFavorites() {
+        return userEntityService.getFavorites();
     }
 
 }

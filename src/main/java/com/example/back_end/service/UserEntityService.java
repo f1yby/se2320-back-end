@@ -8,9 +8,9 @@ import javax.persistence.criteria.CriteriaBuilder;
 import java.util.List;
 
 public interface UserEntityService {
-    public Result<UserEntity> login(String name, String password);
+    public Result<String> login(String name, String password);
     public Result<UserEntity> register(UserEntity user);
-    public Result<UserEntity> favor(Integer uid, String hid);
-    public Result<UserEntity> unFavor(Integer uid, String hid);
-    public List<HouseEntity> getFavorites(Integer uid);
+    public Result<UserEntity> favor(String hid);
+    public Result<UserEntity> unFavor(String hid);
+    public List<HouseEntity> getFavorites();
 }
