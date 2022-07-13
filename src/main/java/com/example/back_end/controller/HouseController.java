@@ -1,7 +1,7 @@
 package com.example.back_end.controller;
 
 import com.example.back_end.entity.HouseEntity;
-import com.example.back_end.service.HouseEntityService;
+import com.example.back_end.serviceImpl.HouseEntityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -47,6 +47,17 @@ public class HouseController {
                 getHouseListByPage(district, price1, price2, rentType,
                         rooms, metro_line, metro_station, pageable);
     }
+
+    @PostMapping("/search/all")
+    public List<HouseEntity> getAllHouse(@RequestParam(required = false) List<String> district,
+                                         Integer price1, Integer price2,
+                                         @RequestParam(required = false) List<Integer> rentType,
+                                         @RequestParam(required = false) List<Integer> rooms,
+                                         Integer metro_line,
+                                         @RequestParam(required = false) List<String> metro_station) {
+        return houseEntityService.getAllHouse(district, price1, price2, rentType, rooms, metro_line, metro_station);
+    }
+
 }
 
 
