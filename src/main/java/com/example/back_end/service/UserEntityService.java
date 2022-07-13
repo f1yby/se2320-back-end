@@ -13,4 +13,5 @@ public interface UserEntityService {
     public Result<String> favor(String hid);
     public Result<String> unFavor(String hid);
     public List<HouseEntity> getFavorites();
+    public Result<String> checkFavorite(String hid);
 }
