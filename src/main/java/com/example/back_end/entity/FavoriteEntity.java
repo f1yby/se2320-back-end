@@ -14,7 +14,7 @@ public class FavoriteEntity {
     @Column(name = "house_id")
     private String houseId;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
