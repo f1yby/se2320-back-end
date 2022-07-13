@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -77,6 +78,8 @@ public class UserEntityServiceImpl implements UserEntityService {
         Optional<HouseEntity> house = houseRepository.findById(hid);
         if (!house.isPresent())
             return new Result<>(Constants.ERROR, "House doesn't exist");
+        if(Objects.equals(checkFavorite(hid).getCode(), Constants.SUCCESS))
+            return new Result<>(Constants.ERROR, "User had favored it");
 
         FavoriteEntity favorite = new FavoriteEntity();
         favorite.setUser(user.get());
