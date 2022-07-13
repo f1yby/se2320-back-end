@@ -121,4 +121,20 @@ public class UserEntityServiceImpl implements UserEntityService {
         return res;
     }
 
+
+    public Result<String> checkFavorite(String hid) {
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<UserEntity> user = userRepository.findByName(name);
+        if (!user.isPresent()) return new Result<>(Constants.ERROR, "No login");
+        boolean flag = false;
+        for (FavoriteEntity favorite : user.get().getFavoriteHouses()) {
+            if (favorite.getHouseId().equals(hid)) {
+                flag = true;
+                break;
+            }
+        }
+        if (flag) return new Result<>(Constants.SUCCESS, "favor");
+        return new Result<>(Constants.ERROR, "no favor");
+    }
+
 }

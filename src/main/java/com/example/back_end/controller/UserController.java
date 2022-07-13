@@ -47,4 +47,8 @@ public class UserController {
         return userEntityService.getFavorites();
     }
 
+    @PostMapping("/checkFavorite")
+    public Result<String> checkFavorite(@RequestParam(value = "house_id") String hid) {
+        return userEntityService.checkFavorite(hid);
+    }
 }
