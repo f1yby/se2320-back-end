@@ -26,17 +26,22 @@ public class HouseEntityService {
                                                 List<String> metro_station,
                                                 Pageable pageable) {
         Specification<HouseEntity> specificationQuery = (root, criteriaQuery, criteriaBuilder) -> {
+//            System.out.println("district=" + district);
+//            System.out.println("price1,price1=[" + price1 + "," + price2 + "]");
+//            System.out.println("rentType=" + rentType);
+//            System.out.println("rooms=" + rooms);
+//            System.out.println("metro_line=" + metro_line + "\t metro_station" + metro_station);
             List<Predicate> predicatesList = new ArrayList<>();
 
             if (price1 != null && price2 != null) {
                 predicatesList.add(criteriaBuilder.between(root.get("price"), price1, price2));
             }
-            if (district != null) {
+            if (district != null && district.size() > 0) {
                 CriteriaBuilder.In<String> inClause = criteriaBuilder.in(root.get("district"));
                 district.forEach(inClause::value);
                 predicatesList.add(inClause);
             }
-            if (rooms != null) {
+            if (rooms != null && rooms.size() > 0) {
                 List<Predicate> predicatesRooms = new ArrayList<>();
                 CriteriaBuilder.In<Integer> inClause = criteriaBuilder.in(root.get("shi"));
                 rooms.forEach(inClause::value);
@@ -47,14 +52,14 @@ public class HouseEntityService {
                 }
                 predicatesList.add(criteriaBuilder.or(predicatesRooms.toArray(new Predicate[0])));
             }
-            if (rentType != null) {
+            if (rentType != null && rentType.size() > 0) {
                 CriteriaBuilder.In<Integer> inClause = criteriaBuilder.in(root.get("rentType"));
                 rentType.forEach(inClause::value);
                 predicatesList.add(inClause);
             }
             if (metro_line != null) {
                 predicatesList.add(criteriaBuilder.equal(root.get("metroLine"), metro_line));
-                if (metro_station != null) {
+                if (metro_station != null && metro_station.size() > 0) {
                     CriteriaBuilder.In<String> inClause = criteriaBuilder.in(root.get("metroStation"));
                     metro_station.forEach(inClause::value);
                     predicatesList.add(inClause);
@@ -64,6 +69,58 @@ public class HouseEntityService {
             return criteriaBuilder.and(predicatesList.toArray(new Predicate[0]));
         };
         return houseRepository.findAll(specificationQuery, pageable);
+    }
+
+    public List<HouseEntity> getAllHouse(List<String> district,
+                                         Integer price1, Integer price2,
+                                         List<Integer> rentType,
+                                         List<Integer> rooms,
+                                         Integer metro_line,
+                                         List<String> metro_station) {
+        Specification<HouseEntity> specificationQuery = (root, criteriaQuery, criteriaBuilder) -> {
+//            System.out.println("district=" + district);
+//            System.out.println("price1,price1=[" + price1 + "," + price2 + "]");
+//            System.out.println("rentType=" + rentType);
+//            System.out.println("rooms=" + rooms);
+//            System.out.println("metro_line=" + metro_line + "\t metro_station" + metro_station);
+            List<Predicate> predicatesList = new ArrayList<>();
+
+            if (price1 != null && price2 != null) {
+                predicatesList.add(criteriaBuilder.between(root.get("price"), price1, price2));
+            }
+            if (district != null && district.size() > 0) {
+                CriteriaBuilder.In<String> inClause = criteriaBuilder.in(root.get("district"));
+                district.forEach(inClause::value);
+                predicatesList.add(inClause);
+            }
+            if (rooms != null && rooms.size() > 0) {
+                List<Predicate> predicatesRooms = new ArrayList<>();
+                CriteriaBuilder.In<Integer> inClause = criteriaBuilder.in(root.get("shi"));
+                rooms.forEach(inClause::value);
+                predicatesRooms.add(inClause);
+                if (rooms.contains(4)) {
+                    //四室及以上
+                    predicatesRooms.add(criteriaBuilder.greaterThan(root.get("shi"), 4));
+                }
+                predicatesList.add(criteriaBuilder.or(predicatesRooms.toArray(new Predicate[0])));
+            }
+            if (rentType != null && rentType.size() > 0) {
+                CriteriaBuilder.In<Integer> inClause = criteriaBuilder.in(root.get("rentType"));
+                rentType.forEach(inClause::value);
+                predicatesList.add(inClause);
+            }
+            if (metro_line != null) {
+                predicatesList.add(criteriaBuilder.equal(root.get("metroLine"), metro_line));
+                if (metro_station != null && metro_station.size() > 0) {
+                    CriteriaBuilder.In<String> inClause = criteriaBuilder.in(root.get("metroStation"));
+                    metro_station.forEach(inClause::value);
+                    predicatesList.add(inClause);
+                }
+            }
+            // and,or 方法会把参数中的predicate组合起来,复杂条件可以互相嵌套组合
+            return criteriaBuilder.and(predicatesList.toArray(new Predicate[0]));
+        };
+        return houseRepository.findAll(specificationQuery);
     }
 
     public List<HouseEntity> findByPriceBetween(int price1, int price2) {
