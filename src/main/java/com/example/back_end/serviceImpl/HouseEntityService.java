@@ -30,6 +30,7 @@ public class HouseEntityService {
 
         }
         houseRepository.saveAll(houses);
+        System.out.println("updateHouseGeocode finish");
         return 0;
     }
 
@@ -88,7 +89,7 @@ public class HouseEntityService {
 
     public Page<HouseEntity> getNearbyHouseByPage(int len, double userLng, double userLat, Pageable pageable) {
 
-        // updateHouseGeocode(len);
+        updateHouseGeocode(len);
 
 
         Specification<HouseEntity> specificationQuery = (root, criteriaQuery, criteriaBuilder) -> {

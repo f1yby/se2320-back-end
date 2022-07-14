@@ -57,7 +57,7 @@ public class HouseController {
         Pageable pageable = PageRequest.of(page, pageSize, sort);
 
         return houseEntityService.
-                getNearbyHouseByPage(8,lng,lat,pageable);
+                getNearbyHouseByPage(5,lng,lat,pageable);
     }
 
     @PostMapping("/search/all")
