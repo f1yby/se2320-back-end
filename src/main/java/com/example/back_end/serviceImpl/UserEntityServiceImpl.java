@@ -3,6 +3,7 @@ package com.example.back_end.serviceImpl;
 import com.example.back_end.entity.FavoriteEntity;
 import com.example.back_end.entity.HouseEntity;
 import com.example.back_end.entity.UserEntity;
+import com.example.back_end.repository.FavoriteRepository;
 import com.example.back_end.repository.HouseRepository;
 import com.example.back_end.repository.UserRepository;
 import com.example.back_end.service.UserEntityService;
@@ -20,12 +21,16 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
 public class UserEntityServiceImpl implements UserEntityService {
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private FavoriteRepository favoriteRepository;
 
     @Autowired
     private HouseRepository houseRepository;
@@ -73,6 +78,8 @@ public class UserEntityServiceImpl implements UserEntityService {
         Optional<HouseEntity> house = houseRepository.findById(hid);
         if (!house.isPresent())
             return new Result<>(Constants.ERROR, "House doesn't exist");
+        if(Objects.equals(checkFavorite(hid).getCode(), Constants.SUCCESS))
+            return new Result<>(Constants.ERROR, "User had favored it");
 
         FavoriteEntity favorite = new FavoriteEntity();
         favorite.setUser(user.get());
@@ -95,9 +102,12 @@ public class UserEntityServiceImpl implements UserEntityService {
         if (!house.isPresent())
             return new Result<>(Constants.ERROR, "House doesn't exist");
 
+        //UserEntity user1 = user.get();
         for (FavoriteEntity favorite1 : user.get().getFavoriteHouses()) {
             if (favorite1.getHouseId().equals(house.get().getId())) {
                 user.get().getFavoriteHouses().remove(favorite1);
+                favoriteRepository.deleteById(favorite1.getId());
+                System.out.println("uid" + user.get().getId());
                 userRepository.save(user.get());
                 // generate new token
                 UserDetails userDetails = userDetailsService.loadUserByUsername(name);
