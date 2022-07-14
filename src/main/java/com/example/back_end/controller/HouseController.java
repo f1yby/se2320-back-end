@@ -48,6 +48,18 @@ public class HouseController {
                         rooms, metro_line, metro_station, pageable);
     }
 
+    @PostMapping("/search/nearby")
+    public Page<HouseEntity> getNearbyHouse(@RequestParam Double lat, @RequestParam Double lng,
+                                      @RequestParam(defaultValue = "5") Integer pageSize,
+                                      @RequestParam(defaultValue = "0") Integer page) {
+//        int page = 1;       //当前页，从 0 开始。
+        Sort sort = Sort.by(Sort.Direction.DESC, "createTime"); //按创建时间排序
+        Pageable pageable = PageRequest.of(page, pageSize, sort);
+
+        return houseEntityService.
+                getNearbyHouseByPage(8,lng,lat,pageable);
+    }
+
     @PostMapping("/search/all")
     public List<HouseEntity> getAllHouse(@RequestParam(required = false) List<String> district,
                                          Integer price1, Integer price2,

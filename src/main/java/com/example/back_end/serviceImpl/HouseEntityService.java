@@ -1,5 +1,6 @@
 package com.example.back_end.serviceImpl;
 
+import ch.hsr.geohash.GeoHash;
 import com.example.back_end.entity.HouseEntity;
 import com.example.back_end.repository.HouseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +13,25 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class HouseEntityService {
     @Autowired
     HouseRepository houseRepository;
+
+    public Integer updateHouseGeocode(Integer len) {
+        Iterable<HouseEntity> houses = houseRepository.findAll();
+        for (HouseEntity house : houses) {
+            GeoHash geoHash = GeoHash.withCharacterPrecision(Double.parseDouble(house.getLatitude()), Double.parseDouble(house.getLongitude()), len);
+            System.out.println(geoHash.toBase32());
+            house.setGeocode(geoHash.toBase32());
+
+        }
+        houseRepository.saveAll(houses);
+        return 0;
+    }
 
     public Page<HouseEntity> getHouseListByPage(List<String> district,
                                                 Integer price1, Integer price2,
@@ -69,6 +84,40 @@ public class HouseEntityService {
             return criteriaBuilder.and(predicatesList.toArray(new Predicate[0]));
         };
         return houseRepository.findAll(specificationQuery, pageable);
+    }
+
+    public Page<HouseEntity> getNearbyHouseByPage(int len, double userLng, double userLat, Pageable pageable) {
+
+        // updateHouseGeocode(len);
+
+
+        Specification<HouseEntity> specificationQuery = (root, criteriaQuery, criteriaBuilder) -> {
+
+            List<Predicate> predicatesList = new ArrayList<>();
+
+            //1.根据要求的范围，确定geoHash码的精度，获取到当前用户坐标的geoHash码
+            GeoHash geoHash = GeoHash.withCharacterPrecision(userLat, userLng, len);
+            //2.获取到用户周边8个方位的geoHash码
+            GeoHash[] adjacent = geoHash.getAdjacent();
+
+            System.out.println(geoHash.toBase32());
+
+            predicatesList.add(criteriaBuilder.equal(root.get("geocode"), geoHash.toBase32()));
+            Stream.of(adjacent).forEach(a ->
+                    predicatesList.add(criteriaBuilder.equal(root.get("geocode"), a.toBase32())));
+
+
+//            //4.过滤超出距离的
+//            users = users.stream()
+//                    .filter(a ->getDistance(a.getLongitude(),a.getLatitude(),userLng,userLat)<= distance)
+//                    .collect(Collectors.toList());
+
+
+            // and,or 方法会把参数中的predicate组合起来,复杂条件可以互相嵌套组合
+            return criteriaBuilder.or(predicatesList.toArray(new Predicate[0]));
+        };
+        return houseRepository.findAll(specificationQuery, pageable);
+
     }
 
     public List<HouseEntity> getAllHouse(List<String> district,
