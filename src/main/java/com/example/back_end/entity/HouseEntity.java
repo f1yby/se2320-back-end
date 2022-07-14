@@ -91,6 +91,9 @@ public class HouseEntity {
     @Basic
     @Column(name = "first_pic_url")
     private String firstPicUrl;
+    @Basic
+    @Column(name = "geocode")
+    private String geocode;
 
     public String getId() {
         return id;
@@ -319,5 +322,13 @@ public class HouseEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, createTime, displaySource, displayRentType, icon, publishDate, pictures, title, location, longitude, latitude, rentType, onlineUrl, district, city, price, source, reportNum, residential, squares, layout, shi, ting, wei, metroLine, metroStation, firstPicUrl);
+    }
+
+    public String getGeocode() {
+        return geocode;
+    }
+
+    public void setGeocode(String geocode) {
+        this.geocode = geocode;
     }
 }
