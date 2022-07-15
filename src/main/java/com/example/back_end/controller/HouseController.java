@@ -40,7 +40,8 @@ public class HouseController {
                                       @RequestParam(defaultValue = "0") Integer page) {
 //        int page = 1;       //当前页，从 0 开始。
         Sort sort = Sort.by(Sort.Direction.DESC, "createTime"); //按创建时间排序
-        Pageable pageable = PageRequest.of(page, pageSize, sort);
+//        Pageable pageable = PageRequest.of(page, pageSize, sort);
+        Pageable pageable = PageRequest.of(page, pageSize);
 
         System.out.println("district= " + district + "\tprice1,price1=[" + price1 + "," + price2 + "]"
                 + "\trentType=" + rentType + "\trooms=" + rooms + "\tmetro_line="
