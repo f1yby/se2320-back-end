@@ -70,6 +70,16 @@ public class HouseController {
         return houseEntityService.getAllHouse(district, price1, price2, rentType, rooms, metro_line, metro_station);
     }
 
+    @PostMapping("/search/keyword")
+    public Page<HouseEntity> searchKeyword(@RequestParam String keyword,
+                                            @RequestParam(defaultValue = "5") Integer pageSize,
+                                            @RequestParam(defaultValue = "0") Integer page) {
+
+        Sort sort = Sort.by(Sort.Direction.DESC, "create_time"); //按创建时间排序
+        Pageable pageable = PageRequest.of(page, pageSize, sort);
+
+        return houseEntityService.searchKeyword(keyword+'*',pageable);
+    }
 }
 
 

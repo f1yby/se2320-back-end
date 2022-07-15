@@ -49,6 +49,7 @@ public class HouseEntityService {
 //            System.out.println("metro_line=" + metro_line + "\t metro_station" + metro_station);
             List<Predicate> predicatesList = new ArrayList<>();
 
+
             if (price1 != null && price2 != null) {
                 predicatesList.add(criteriaBuilder.between(root.get("price"), price1, price2));
             }
@@ -175,5 +176,9 @@ public class HouseEntityService {
 
     public List<HouseEntity> findByPriceBetween(int price1, int price2) {
         return houseRepository.findByPriceBetween(price1, price2);
+    }
+
+    public Page<HouseEntity> searchKeyword(String keyword, Pageable pageable){
+        return houseRepository.searchKeyword(keyword, pageable);
     }
 }
