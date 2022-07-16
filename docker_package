@@ -1,0 +1,14 @@
+#!/bin/sh
+if (($# == 0 || $# >= 3)); then
+    printf "usage: docker_package [path] [tag]\n"
+    exit 1
+fi
+path=$1
+tag=$2
+
+$path/mvnw clean package
+docker build -t $tag $path/
+mkdir $path/docker_image
+docker image save $tag | gzip >$path/docker_image/$tag.tar.gz
+
+exit 0
