@@ -13,7 +13,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
@@ -40,6 +39,7 @@ public class HouseEntityService {
                                                 List<Integer> rooms,
                                                 Integer metro_line,
                                                 List<String> metro_station,
+                                                String keywords,
                                                 Pageable pageable) {
         Specification<HouseEntity> specificationQuery = (root, criteriaQuery, criteriaBuilder) -> {
 //            System.out.println("district=" + district);
@@ -48,6 +48,7 @@ public class HouseEntityService {
 //            System.out.println("rooms=" + rooms);
 //            System.out.println("metro_line=" + metro_line + "\t metro_station" + metro_station);
             List<Predicate> predicatesList = new ArrayList<>();
+
 
             if (price1 != null && price2 != null) {
                 predicatesList.add(criteriaBuilder.between(root.get("price"), price1, price2));
@@ -80,6 +81,16 @@ public class HouseEntityService {
                     metro_station.forEach(inClause::value);
                     predicatesList.add(inClause);
                 }
+            }
+            if (keywords != null) {
+                predicatesList.add(
+                        criteriaBuilder.or(
+                        criteriaBuilder.like(root.get("title"), "%" + keywords + "%"),
+                        criteriaBuilder.like(root.get("location"), "%" + keywords + "%"),
+                        criteriaBuilder.like(root.get("residential"), "%" + keywords + "%"),
+                        criteriaBuilder.like(root.get("layout"), "%" + keywords + "%")
+                        )
+                );
             }
             // and,or 方法会把参数中的predicate组合起来,复杂条件可以互相嵌套组合
             return criteriaBuilder.and(predicatesList.toArray(new Predicate[0]));
@@ -175,5 +186,9 @@ public class HouseEntityService {
 
     public List<HouseEntity> findByPriceBetween(int price1, int price2) {
         return houseRepository.findByPriceBetween(price1, price2);
+    }
+
+    public Page<HouseEntity> searchKeyword(String keyword, Pageable pageable) {
+        return houseRepository.searchKeyword(keyword, pageable);
     }
 }

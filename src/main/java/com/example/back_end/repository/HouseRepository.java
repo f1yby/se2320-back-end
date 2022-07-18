@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,4 +20,8 @@ public interface HouseRepository extends
     List<HouseEntity> findByPriceBetween(int price1, int price2);
 
     Optional<HouseEntity> findById(String id);
+
+    @Query(value = "SELECT * FROM zlm.house WHERE MATCH(title, location, residential, layout) AGAINST (?1 IN BOOLEAN MODE)", nativeQuery = true)
+    Page<HouseEntity> searchKeyword(String keyword, Pageable pageable);
+
 }
