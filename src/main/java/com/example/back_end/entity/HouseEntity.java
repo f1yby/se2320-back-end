@@ -94,6 +94,9 @@ public class HouseEntity {
     @Basic
     @Column(name = "geocode")
     private String geocode;
+    @Basic
+    @Column(name = "compress")
+    private String compress;
 
     public String getId() {
         return id;
@@ -330,5 +333,13 @@ public class HouseEntity {
 
     public void setGeocode(String geocode) {
         this.geocode = geocode;
+    }
+
+    public String getCompress() {
+        return compress;
+    }
+
+    public void setCompress(String compress) {
+        this.compress = compress;
     }
 }
