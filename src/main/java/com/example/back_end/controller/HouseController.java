@@ -2,6 +2,9 @@ package com.example.back_end.controller;
 
 import com.example.back_end.entity.HouseEntity;
 import com.example.back_end.serviceImpl.HouseEntityService;
+import org.aspectj.weaver.ast.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +20,7 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "/house")
 public class HouseController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(Test.class);
 
     @Autowired
     HouseEntityService houseEntityService;
@@ -43,14 +47,21 @@ public class HouseController {
 //        Pageable pageable = PageRequest.of(page, pageSize, sort);
         Pageable pageable = PageRequest.of(page, pageSize);
 
-        System.out.println("district= " + district + "\tprice1,price1=[" + price1 + "," + price2 + "]"
-                + "\trentType=" + rentType + "\trooms=" + rooms + "\tmetro_line="
-                + metro_line + "\tmetro_station= " + metro_station + "\tpage= "
-                + page + "\tpageSize= " + pageSize + "\tkeywords= " + keywords);
+
+        LOGGER.info("House Search Request:   " +
+                "{district} = " + district + "\t" +
+                "{price1,price1} = [" + price1 + "," + price2 + "]" + "\t" +
+                "{rentType} = " + rentType + "\t" +
+                "{rooms} = " + rooms + "\t" +
+                "{metroLine} = " + metro_line + "\t" +
+                "{metroStation} = " + metro_station + "\t" +
+                "{page} = " + page + "\t" +
+                "{pageSize} = " + pageSize + "\t" +
+                "{keywords} = " + keywords);
 
         return houseEntityService.
                 getHouseListByPage(district, price1, price2, rentType,
-                        rooms, metro_line,metro_station, keywords, pageable);
+                        rooms, metro_line, metro_station, keywords, pageable);
     }
 
     @PostMapping("/search/nearby")
