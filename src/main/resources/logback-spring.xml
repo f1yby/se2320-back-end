@@ -15,7 +15,6 @@
                     <pattern>
                         {
                         "logLevel": "%level",
-                        "serviceName": "${spring.application.name}",
                         "pid": "${PID:-}",
                         "thread": "%thread",
                         "class": "%logger{40}",

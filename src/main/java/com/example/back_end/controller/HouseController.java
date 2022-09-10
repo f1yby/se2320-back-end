@@ -43,20 +43,15 @@ public class HouseController {
                                       @RequestParam(defaultValue = "5") Integer pageSize,
                                       @RequestParam(defaultValue = "0") Integer page) {
 //        int page = 1;       //当前页，从 0 开始。
-        Sort sort = Sort.by(Sort.Direction.DESC, "createTime"); //按创建时间排序
+//        Sort sort = Sort.by(Sort.Direction.DESC, "createTime"); //按创建时间排序
 //        Pageable pageable = PageRequest.of(page, pageSize, sort);
         Pageable pageable = PageRequest.of(page, pageSize);
 
 
-        LOGGER.info("House Search Request:   " +
+        LOGGER.info("House Search Request: " +
                 "{district} = " + district + "\t" +
-                "{price1,price1} = [" + price1 + "," + price2 + "]" + "\t" +
-                "{rentType} = " + rentType + "\t" +
-                "{rooms} = " + rooms + "\t" +
+                "{price1, price2} = [" + price1 + ", " + price2 + "]" + "\t" +
                 "{metroLine} = " + metro_line + "\t" +
-                "{metroStation} = " + metro_station + "\t" +
-                "{page} = " + page + "\t" +
-                "{pageSize} = " + pageSize + "\t" +
                 "{keywords} = " + keywords);
 
         return houseEntityService.
