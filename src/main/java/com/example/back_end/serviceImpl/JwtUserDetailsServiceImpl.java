@@ -22,13 +22,12 @@ public class JwtUserDetailsServiceImpl  implements UserDetailsService {
     private UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String s)  {
         Optional<UserEntity> userEntity = userRepository.findByName(s);
         UserEntity user;
         if (userEntity.isPresent())
             user = userEntity.get();
-        else
-            throw new UsernameNotFoundException(String.format("'%s'.这个用户不存在", s));
+        else return null;
         List<SimpleGrantedAuthority> collect = new ArrayList<>();
         collect.add(new SimpleGrantedAuthority("user"));
         return new UserAuth(user.getName(), user.getPassword(), collect);
