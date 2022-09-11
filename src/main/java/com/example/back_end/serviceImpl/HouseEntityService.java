@@ -20,18 +20,18 @@ public class HouseEntityService {
     @Autowired
     HouseRepository houseRepository;
 
-    public Integer updateHouseGeocode(Integer len) {
-        Iterable<HouseEntity> houses = houseRepository.findAll();
-        for (HouseEntity house : houses) {
-            GeoHash geoHash = GeoHash.withCharacterPrecision(Double.parseDouble(house.getLatitude()), Double.parseDouble(house.getLongitude()), len);
-            System.out.println(geoHash.toBase32());
-            house.setGeocode(geoHash.toBase32());
-
-        }
-        houseRepository.saveAll(houses);
-        System.out.println("updateHouseGeocode finish");
-        return 0;
-    }
+//    public Integer updateHouseGeocode(Integer len) {
+//        Iterable<HouseEntity> houses = houseRepository.findAll();
+//        for (HouseEntity house : houses) {
+//            GeoHash geoHash = GeoHash.withCharacterPrecision(Double.parseDouble(house.getLatitude()), Double.parseDouble(house.getLongitude()), len);
+//            System.out.println(geoHash.toBase32());
+//            house.setGeocode(geoHash.toBase32());
+//
+//        }
+//        houseRepository.saveAll(houses);
+//        System.out.println("updateHouseGeocode finish");
+//        return 0;
+//    }
 
     public Page<HouseEntity> getHouseListByPage(List<String> district,
                                                 Integer price1, Integer price2,

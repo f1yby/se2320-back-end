@@ -69,82 +69,101 @@ public class UserEntityServiceImpl implements UserEntityService {
         return new Result<>(Constants.ERROR, "Register error");
     }
 
+
     public Result<String> favor(String hid) {
-        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        String name;
+        try {
+            name = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        Optional<UserEntity> user = userRepository.findByName(name);
-        if (!user.isPresent())
-            return new Result<>(Constants.ERROR, "User doesn't exist");
-        Optional<HouseEntity> house = houseRepository.findById(hid);
-        if (!house.isPresent())
-            return new Result<>(Constants.ERROR, "House doesn't exist");
-        if(Objects.equals(checkFavorite(hid).getCode(), Constants.SUCCESS))
-            return new Result<>(Constants.ERROR, "User had favored it");
+            Optional<UserEntity> user = userRepository.findByName(name);
+            if (!user.isPresent())
+                return new Result<>(Constants.ERROR, "User doesn't exist");
+            Optional<HouseEntity> house = houseRepository.findById(hid);
+            if (!house.isPresent())
+                return new Result<>(Constants.ERROR, "House doesn't exist");
+            if(Objects.equals(checkFavorite(hid).getCode(), Constants.SUCCESS))
+                return new Result<>(Constants.ERROR, "User had favored it");
 
-        FavoriteEntity favorite = new FavoriteEntity();
-        favorite.setUser(user.get());
-        favorite.setHouseId(house.get().getId());
-        user.get().getFavoriteHouses().add(favorite);
-        userRepository.save(user.get());
-        // generate new token
-        UserDetails userDetails = userDetailsService.loadUserByUsername(name);
-        UsernamePasswordAuthenticationToken upToken
-                = new UsernamePasswordAuthenticationToken(name, user.get().getPassword());
-        return new Result<>(Constants.SUCCESS, "Success to favor", jwtTokenUtil.generateToken(userDetails));
+            FavoriteEntity favorite = new FavoriteEntity();
+            favorite.setUser(user.get());
+            favorite.setHouseId(house.get().getId());
+            user.get().getFavoriteHouses().add(favorite);
+            userRepository.save(user.get());
+            // generate new token
+            UserDetails userDetails = userDetailsService.loadUserByUsername(name);
+            UsernamePasswordAuthenticationToken upToken
+                    = new UsernamePasswordAuthenticationToken(name, user.get().getPassword());
+            return new Result<>(Constants.SUCCESS, "Success to favor", jwtTokenUtil.generateToken(userDetails));
+        } catch (NullPointerException e) {
+            return new Result<>(Constants.ERROR, "No token");
+        }
     }
 
     public Result<String> unFavor(String hid) {
-        String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<UserEntity> user = userRepository.findByName(name);
-        if (!user.isPresent())
-            return new Result<>(Constants.ERROR, "User doesn't exist");
-        Optional<HouseEntity> house = houseRepository.findById(hid);
-        if (!house.isPresent())
-            return new Result<>(Constants.ERROR, "House doesn't exist");
+        try {
+            String name = SecurityContextHolder.getContext().getAuthentication().getName();
+            Optional<UserEntity> user = userRepository.findByName(name);
+            if (!user.isPresent())
+                return new Result<>(Constants.ERROR, "User doesn't exist");
+            Optional<HouseEntity> house = houseRepository.findById(hid);
+            if (!house.isPresent())
+                return new Result<>(Constants.ERROR, "House doesn't exist");
 
-        //UserEntity user1 = user.get();
-        for (FavoriteEntity favorite1 : user.get().getFavoriteHouses()) {
-            if (favorite1.getHouseId().equals(house.get().getId())) {
-                user.get().getFavoriteHouses().remove(favorite1);
-                favoriteRepository.deleteById(favorite1.getId());
-                System.out.println("uid" + user.get().getId());
-                userRepository.save(user.get());
-                // generate new token
-                UserDetails userDetails = userDetailsService.loadUserByUsername(name);
-                UsernamePasswordAuthenticationToken upToken
-                        = new UsernamePasswordAuthenticationToken(name, user.get().getPassword());
-                return new Result<>(Constants.SUCCESS, "Success to unfavor", jwtTokenUtil.generateToken(userDetails));
+            //UserEntity user1 = user.get();
+            for (FavoriteEntity favorite1 : user.get().getFavoriteHouses()) {
+                if (favorite1.getHouseId().equals(house.get().getId())) {
+                    user.get().getFavoriteHouses().remove(favorite1);
+                    favoriteRepository.deleteById(favorite1.getId());
+                    System.out.println("uid" + user.get().getId());
+                    userRepository.save(user.get());
+                    // generate new token
+                    UserDetails userDetails = userDetailsService.loadUserByUsername(name);
+                    UsernamePasswordAuthenticationToken upToken
+                            = new UsernamePasswordAuthenticationToken(name, user.get().getPassword());
+                    return new Result<>(Constants.SUCCESS, "Success to unfavor", jwtTokenUtil.generateToken(userDetails));
+                }
             }
+            return new Result<>(Constants.ERROR, "Favor doesn't exist");
+        } catch (NullPointerException e) {
+            return new Result<>(Constants.ERROR, "No token");
         }
-        return new Result<>(Constants.ERROR, "Favor doesn't exist");
     }
 
     public List<HouseEntity> getFavorites() {
-        String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<UserEntity> user = userRepository.findByName(name);
-        if (!user.isPresent()) return null;
-        List<HouseEntity> res = new ArrayList<>();
-        for (FavoriteEntity favorite : user.get().getFavoriteHouses()) {
-            Optional<HouseEntity> house = houseRepository.findById(favorite.getHouseId());
-            house.ifPresent(res::add);
+        try {
+            String name = SecurityContextHolder.getContext().getAuthentication().getName();
+            Optional<UserEntity> user = userRepository.findByName(name);
+            if (!user.isPresent()) return null;
+            List<HouseEntity> res = new ArrayList<>();
+            for (FavoriteEntity favorite : user.get().getFavoriteHouses()) {
+                Optional<HouseEntity> house = houseRepository.findById(favorite.getHouseId());
+                house.ifPresent(res::add);
+            }
+            return res;
+        } catch (NullPointerException e) {
+            return null;
         }
-        return res;
     }
 
 
     public Result<String> checkFavorite(String hid) {
-        String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<UserEntity> user = userRepository.findByName(name);
-        if (!user.isPresent()) return new Result<>(Constants.ERROR, "No login");
-        boolean flag = false;
-        for (FavoriteEntity favorite : user.get().getFavoriteHouses()) {
-            if (favorite.getHouseId().equals(hid)) {
-                flag = true;
-                break;
+        try {
+            String name = SecurityContextHolder.getContext().getAuthentication().getName();
+            Optional<UserEntity> user = userRepository.findByName(name);
+            if (!user.isPresent()) return new Result<>(Constants.ERROR, "No login");
+            boolean flag = false;
+            for (FavoriteEntity favorite : user.get().getFavoriteHouses()) {
+                if (favorite.getHouseId().equals(hid)) {
+                    flag = true;
+                    break;
+                }
             }
+            if (flag) return new Result<>(Constants.SUCCESS, "favor");
+            return new Result<>(Constants.ERROR, "no favor");
         }
-        if (flag) return new Result<>(Constants.SUCCESS, "favor");
-        return new Result<>(Constants.ERROR, "no favor");
+        catch (NullPointerException e) {
+            return new Result<>(Constants.ERROR, "No token");
+        }
     }
 
 }
